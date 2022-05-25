@@ -53,6 +53,7 @@ CoresConfig.java
 SwaggerConfig.java
 WebSecurityConfig.java
 FcmUtil.java
+pom.xml
 
 # External tool builders
 .externalToolBuilders/
