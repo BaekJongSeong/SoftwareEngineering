@@ -14,6 +14,4 @@ public interface ILocationService {
     public Location deleteLocation(PathDto pathDto);
     
     public Location findByFetchScheduleId(PathDto pathDto);
-    
-    public String pathSearching(PathDto pathDto);
-}
+   }

@@ -74,17 +74,4 @@ public class LocationService implements ILocationService{
     	return schedule.getLocation();
     }
     
-    @Override
-    public String pathSearching(PathDto pathDto) {
-    /*	Account account = accountService.findByLoginIdOrReturn(pathDto.getLoginId());
-    	Calendar calendar = calendarService.findByAccountIdAndNameOrThrow(account.getAccountId(),pathDto.getCalendarName());
-    	Schedule schedule = scheduleService.findByCalendarIdAndNameOrThrow(calendar.getCalendarId(),pathDto.getScheduleName());
-    	String url = "https://map.kakao.com/?map_type=TYPE_MAP&"
-    			+ "target=car&rt=%2C%2C523953%2C1084098&rt1="+pathDto.getStartName()+"&rt2="+schedule.getLocation().getName();
-    	Document doc = Jsoup.connect(url).get();
-    	Elements element = doc.select("div.contents");
-    	Integer temp = Integer.valueOf(element.select("span.num").text());
-    	*/
-    	return "기다려";
-    }
 }

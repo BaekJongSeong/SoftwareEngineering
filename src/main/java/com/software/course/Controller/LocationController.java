@@ -46,13 +46,5 @@ public class LocationController {
 		return new ResponseEntity<>(ResDto1.createResDto(LocationDto.builder().name(location.getName())
 				.latitude(location.getLatitude()).longitude(location.getLongitude()).build(),1,0), new HttpHeaders(),HttpStatus.OK);
 	}
-	
-	@GetMapping("/path")
-	public ResponseEntity<String> pathSearching(
-			@PathVariable String loginId,
-			@RequestBody PathDto pathDto
-	){
-		return new ResponseEntity<>(locationService.pathSearching(pathDto), new HttpHeaders(),HttpStatus.OK);
 
-	}
 }
