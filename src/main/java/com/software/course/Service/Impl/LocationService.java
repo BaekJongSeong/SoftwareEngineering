@@ -73,5 +73,10 @@ public class LocationService implements ILocationService{
     			pathDto.getCalendarName(), pathDto.getScheduleName());
     	return schedule.getLocation();
     }
+    @Override
+	public Location getLocationByScheduleId(String loginId,String calendarName,String scheduleName) {
+    	Schedule schedule = scheduleService.findByFetchCalendarId(loginId,calendarName,scheduleName);
+    	return schedule.getLocation();
+    }
     
 }

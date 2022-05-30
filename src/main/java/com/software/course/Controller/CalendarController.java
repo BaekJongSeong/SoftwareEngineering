@@ -38,11 +38,22 @@ public class CalendarController {
 	 
 	 private final IAccountService accountService;
 	 
+	 	@GetMapping("/calendar/{loginId}/{calendarName}")
+	    public ResponseEntity<ResDto1<CalendarDto>> getCalendar (
+	    		@PathVariable String loginId,
+	    		@PathVariable String calendarName
+	    ){
+	 		List<Calendar> calendarList = calendarService.findByLoginIdAndNameOrThrow(loginId,null,0);
+	    	return new ResponseEntity<>(ResDto1.createResDto(
+	    			CalendarDto.createCalendarDto(calendarList.get(0)),1,0),
+	    			new HttpHeaders(),HttpStatus.OK);	    
+	    	}	 
+	 	
 	    @GetMapping("/calendar/{loginId}")
 	    public ResponseEntity<ResDto2<CalendarDto>> getList (
 	    		@PathVariable String loginId
 	    ){
-	    	List<Calendar> calendarList = calendarService.findByLoginIdAndNameOrThrow(loginId,null);
+	    	List<Calendar> calendarList = calendarService.findByLoginIdAndNameOrThrow(loginId,null,1);
 	    	return new ResponseEntity<>(ResDto2.createResDto(
 	    			CalendarDto.createCalendarDtoList(calendarList),1,0),
 	    			new HttpHeaders(),HttpStatus.OK);	    

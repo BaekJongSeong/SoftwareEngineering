@@ -8,6 +8,8 @@ import com.software.course.Entity.Schedule;
 import com.software.course.Model.ScheduleDto;
 
 public interface IAlarmService {
+	
+	public Alarm getAlarmByScheduleId(String loginId,String calendarName,String scheduleName);
 
 	public Alarm createAlarm(Date time, Schedule schedule);
 	

@@ -40,6 +40,18 @@ public class ScheduleController {
 	
 	private final IAlarmService alarmService;
 	
+	@GetMapping("schedule/{loginId}/{calendarName}/{scheduleName}")
+	public ResponseEntity<ResDto1<ScheduleDto>>getSchedule(
+			@PathVariable String loginId,
+			@PathVariable String calendarName,
+			@PathVariable String scheduleName
+	){
+		Schedule schedule = scheduleService.findByFetchCalendarId(loginId,calendarName,scheduleName);
+		return new ResponseEntity<>(ResDto1.createResDto(
+				ScheduleDto.createScheduleDto(loginId,calendarName,schedule),1,0),
+    			new HttpHeaders(),HttpStatus.OK);	
+	}
+	
 	@GetMapping("schedule/{loginId}/{calendarName}")
 	public ResponseEntity<ResDto2<ScheduleDto>>getScheduleList(
 			@PathVariable String loginId,

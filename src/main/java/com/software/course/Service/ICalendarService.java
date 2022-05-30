@@ -7,7 +7,7 @@ import com.software.course.Entity.Calendar;
 
 public interface ICalendarService {
 	
-	public List<Calendar> findByLoginIdAndNameOrThrow(String loginId, String calendarName);
+	public List<Calendar> findByLoginIdAndNameOrThrow(String loginId, String calendarName, int flag);
 	
 	public Calendar createCalendar(String loginId, String calendarName, Account account);
 	

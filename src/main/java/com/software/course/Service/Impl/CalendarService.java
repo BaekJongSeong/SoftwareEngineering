@@ -1,10 +1,11 @@
 package com.software.course.Service.Impl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.software.course.Entity.Account;
 import com.software.course.Entity.Calendar;
@@ -29,10 +30,15 @@ public class CalendarService implements ICalendarService{
 	
 	//for test
 	@Override
-	public List<Calendar> findByLoginIdAndNameOrThrow(String loginId, String calendarName) {
+	public List<Calendar> findByLoginIdAndNameOrThrow(String loginId, String calendarName, int flag) {
 		Account account = accountRepository.findByFetchAccount(loginId).orElseThrow(() 
         		-> new UsernameNotFoundException("not found account"));
-	
+		if(flag == 0) {
+			for(Calendar calendar : account.getCalendarList())
+				if(calendar.getName().equals(calendarName))
+					return new ArrayList<Calendar>(Arrays.asList(calendar));
+		}
+		
 		return account.getCalendarList();
 	}
 	

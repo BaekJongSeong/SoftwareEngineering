@@ -1,16 +1,13 @@
 package com.software.course.Controller;
 
 import java.io.IOException;
-import java.util.Locale;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.software.course.FcmUtil;
 import com.software.course.Entity.Alarm;
 import com.software.course.Entity.Schedule;
+import com.software.course.Model.AlarmDto;
 import com.software.course.Model.ResDto1;
 import com.software.course.Model.ScheduleDto;
 import com.software.course.Service.IAlarmService;
@@ -43,6 +41,17 @@ public class AlarmController {
 	private final IScheduleService scheduleService;
 	
 	private final ILocationService locationService;
+	
+	@GetMapping("alarm/{loginId}/{calendarName}/{scheduleName}")
+	public ResponseEntity<ResDto1<AlarmDto>>getAlarm(
+			@PathVariable String loginId,
+			@PathVariable String calendarName,
+			@PathVariable String scheduleName
+	){
+		Alarm alarm = alarmService.getAlarmByScheduleId(loginId,calendarName,scheduleName);
+		return new ResponseEntity<>(ResDto1.createResDto(AlarmDto.createAlarmDto(loginId,
+				alarm),1,0), new HttpHeaders(),HttpStatus.OK);
+	}
 		
 	@PutMapping("/alarm")
     public ResponseEntity<ResDto1<ScheduleDto>> modifyAlarm (@RequestBody ScheduleDto scheduleDto) {
@@ -75,4 +84,6 @@ public class AlarmController {
 		return "test";
 	
 	}
+	
+	
 }

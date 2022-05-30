@@ -32,6 +32,17 @@ public class LocationController {
 	private final ILocationService locationService;
 	
 	private final IScheduleService scheduleService;
+	
+	@GetMapping("location/{loginId}/{calendarName}/{scheduleName}")
+    public ResponseEntity<ResDto1<LocationDto>> getLocation (
+    		@PathVariable String loginId,
+			@PathVariable String calendarName,
+			@PathVariable String scheduleName
+    ) {
+		Location location = locationService.getLocationByScheduleId(loginId,calendarName,scheduleName);
+		return new ResponseEntity<>(ResDto1.createResDto(LocationDto.createLocationDto(
+				loginId,location),1,0), new HttpHeaders(),HttpStatus.OK);
+	}
 		
 	@PutMapping("/location")
     public ResponseEntity<ResDto1<LocationDto>> modifyLocation (@RequestBody PathDto pathDto) {

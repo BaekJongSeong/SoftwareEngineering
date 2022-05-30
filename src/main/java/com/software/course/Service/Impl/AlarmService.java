@@ -6,7 +6,6 @@ import java.util.Date;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
 import com.software.course.Entity.Alarm;
@@ -15,12 +14,15 @@ import com.software.course.Model.ScheduleDto;
 import com.software.course.Repository.AlarmRepository;
 import com.software.course.Repository.ScheduleRepository;
 import com.software.course.Service.IAlarmService;
+import com.software.course.Service.IScheduleService;
 
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
 public class AlarmService implements IAlarmService {
+	
+	private final IScheduleService scheduleService;
 	
 	private final AlarmRepository alarmRepository;
 	
@@ -58,6 +60,11 @@ public class AlarmService implements IAlarmService {
 		return content;
 	}
 	
+	@Override
+	public Alarm getAlarmByScheduleId(String loginId,String calendarName,String scheduleName) {
+		Schedule schedule = scheduleService.findByFetchCalendarId(loginId,calendarName,scheduleName);
+		return schedule.getAlarmList().get(0);
+	}
 	
     public String pathSearching(ScheduleDto scheduleDto, Schedule schedule) throws IOException {
     	String userAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36";
