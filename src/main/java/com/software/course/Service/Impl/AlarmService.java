@@ -7,8 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Optional;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -45,7 +44,12 @@ public class AlarmService implements IAlarmService {
 	private final CalendarRepository calendarRepository;
 	
 	private final LocationRepository locationRepository;
+	
+	@Value("${API.key}")
+	private String key;
 
+	@Value("${API.password}")
+	private String password;
 	
 	@Override
 	public Alarm createAlarm(Date time, Schedule schedule) {
@@ -125,8 +129,8 @@ public class AlarmService implements IAlarmService {
     	RestTemplate restTemplate = new RestTemplate();
 
     	RequestEntity<Void> req = RequestEntity.get(uri)
-    	.header("X-NCP-APIGW-API-KEY-ID","gwmimutb9e")
-    	.header("X-NCP-APIGW-API-KEY","ldgWw0mxDmkIgrqKx8YSrnBIUmNgqP1o0t0NVjsy")
+    	.header("X-NCP-APIGW-API-KEY-ID",key)
+    	.header("X-NCP-APIGW-API-KEY",password)
     	.build();
 
     	ResponseEntity<String> result = restTemplate.exchange(req,String.class);
