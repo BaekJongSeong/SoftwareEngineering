@@ -15,4 +15,5 @@ public interface CalendarRepository extends JpaRepository<Calendar, Integer> {
 	
 	@Query("select DISTINCT c from Calendar c left join fetch c.scheduleList where c.calendarId=?1")
     Optional<Calendar> findByFetchCalendar(Integer calendarId);
+	
 }

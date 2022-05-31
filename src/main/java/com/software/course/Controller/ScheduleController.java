@@ -40,7 +40,7 @@ public class ScheduleController {
 	
 	private final IAlarmService alarmService;
 	
-	@GetMapping("schedule/{loginId}/{calendarName}/{scheduleName}")
+	@GetMapping("/schedule/{loginId}/{calendarName}/{scheduleName}")
 	public ResponseEntity<ResDto1<ScheduleDto>>getSchedule(
 			@PathVariable String loginId,
 			@PathVariable String calendarName,
@@ -52,7 +52,7 @@ public class ScheduleController {
     			new HttpHeaders(),HttpStatus.OK);	
 	}
 	
-	@GetMapping("schedule/{loginId}/{calendarName}")
+	@GetMapping("/schedule/{loginId}/{calendarName}")
 	public ResponseEntity<ResDto2<ScheduleDto>>getScheduleList(
 			@PathVariable String loginId,
 			@PathVariable String calendarName

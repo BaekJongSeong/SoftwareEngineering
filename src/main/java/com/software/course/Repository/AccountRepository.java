@@ -17,4 +17,5 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
         
     @Query("select DISTINCT c from Account c left join fetch c.calendarList where c.loginId=?1")
     Optional<Account> findByFetchAccount(String loginId);
+    
 }

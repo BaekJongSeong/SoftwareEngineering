@@ -1,14 +1,15 @@
 package com.software.course.Controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,7 +43,7 @@ public class AlarmController {
 	
 	private final ILocationService locationService;
 	
-	@GetMapping("alarm/{loginId}/{calendarName}/{scheduleName}")
+	@GetMapping("/alarm/{loginId}/{calendarName}/{scheduleName}")
 	public ResponseEntity<ResDto1<AlarmDto>>getAlarm(
 			@PathVariable String loginId,
 			@PathVariable String calendarName,
@@ -69,20 +70,17 @@ public class AlarmController {
 				scheduleDto.getCalendarName(),schedule),1,0), new HttpHeaders(),HttpStatus.OK);
 	}
 	
-	//schedular 태그
-	@PostMapping("/alarm")
-	public @ResponseBody String alarm(
-			@RequestBody ScheduleDto scheduleDto
-	) throws IOException {
-		
-		Schedule schedule = scheduleService.findByFetchCalendarId(scheduleDto.getLoginId(), scheduleDto.getCalendarName(), scheduleDto.getScheduleName());
-		String tokenId = "edaRxEK6T5KFOEriMVFkZ3:APA91bGInRSO9Z5GwKj_hGT2A7kVgt0OcI5-lOX6HEFoTvhr3Ygvm3MXqGEu0b54BfLRgufbR73MBROM_RriYgH4N0yqkiYcidoEgcVuPlz45LdQez9bVHsQTDyP6wDNdTkqZGsJo7uS";
-		String title = scheduleDto.getLoginId()+"님, 일정 알림입니다";
-		String content = alarmService.makeAlarmContent(scheduleDto,schedule);
-		FcmUtil fcmUtil = new FcmUtil();
-		fcmUtil.send_FCM(tokenId,title,content);
-		return "test";
-	
+	@Scheduled(cron = "0 0/1 * * * *")
+	public void alarm() throws IOException {
+		List<Schedule> scheduleForAlarmList = scheduleService.findScheduleForAlarm();
+		//Schedule schedule = scheduleService.findByFetchCalendarId(scheduleDto.getLoginId(), scheduleDto.getCalendarName(), scheduleDto.getScheduleName());
+		for(Schedule schedule : scheduleForAlarmList) {
+			String tokenId = "dPAvh5R6Tjyo_bq0U7DRFz:APA91bH2ZEHxSje8irSYFP0z8D3WVQuDcdEGGbcOmH1UPZUIE-M7CmbbPlxVPs1CvDaMjuslgGgkzfkh8IHwezOxfKTaeheedDNhBVSWx6rMdHx_USv-rE8UD_2Ovdc7rzww5-glcTE3";
+			String content = alarmService.makeAlarmContent(schedule);
+			FcmUtil fcmUtil = new FcmUtil();
+			fcmUtil.send_FCM(tokenId,alarmService.makeAlarmTitle(schedule.getCalendar()),content);
+		}
+		//return "test";	
 	}
 	
 	

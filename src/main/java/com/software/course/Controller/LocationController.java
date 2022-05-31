@@ -33,7 +33,7 @@ public class LocationController {
 	
 	private final IScheduleService scheduleService;
 	
-	@GetMapping("location/{loginId}/{calendarName}/{scheduleName}")
+	@GetMapping("/location/{loginId}/{calendarName}/{scheduleName}")
     public ResponseEntity<ResDto1<LocationDto>> getLocation (
     		@PathVariable String loginId,
 			@PathVariable String calendarName,

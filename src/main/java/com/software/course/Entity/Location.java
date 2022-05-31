@@ -37,7 +37,7 @@ public class Location {
 
     private Double longitude;
     
-    @OneToOne(mappedBy = "location", fetch=FetchType.LAZY , cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "location", fetch=FetchType.LAZY , cascade = CascadeType.REMOVE)
     private Account account;
     
     @OneToOne(mappedBy = "location", fetch=FetchType.LAZY , cascade = CascadeType.REMOVE)

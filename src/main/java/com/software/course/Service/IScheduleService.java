@@ -17,4 +17,6 @@ public interface IScheduleService {
 	public Schedule findByFetchCalendarId(String loginId, String calendarName, String scheduleName);
 
 	public List<Schedule> findByFetchCalendarIdOrThrow(String loginId,String calendarName);
+	
+	public List<Schedule> findScheduleForAlarm();
 }

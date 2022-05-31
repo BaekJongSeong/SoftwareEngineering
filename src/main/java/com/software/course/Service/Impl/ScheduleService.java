@@ -1,5 +1,9 @@
 package com.software.course.Service.Impl;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Date;
+//import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -86,5 +90,24 @@ public class ScheduleService implements IScheduleService{
 		Calendar calendar = calendarRepository.findByFetchCalendar(calendarService.findByFetchLoginId(
 				loginId, calendarName).getCalendarId()).orElseThrow(() -> new UsernameNotFoundException("not found calendar"));
 		return calendar.getScheduleList();
+	}
+	
+	@Override
+	public List<Schedule> findScheduleForAlarm(){
+		List<Schedule> scheduleList = scheduleRepository.findAll();
+		List<Schedule> returnList = new ArrayList<>();
+		
+		for(Schedule schedule : scheduleList) {
+			if((long)(schedule.getTime().getTime() - new Date().getTime()) < 0)
+				continue;
+			java.util.Calendar cal1 = java.util.Calendar.getInstance();
+			java.util.Calendar cal2 = java.util.Calendar.getInstance();
+			cal1.setTime(schedule.getTime());
+			cal2.setTime(new Timestamp(System.currentTimeMillis()));
+			if((long)(cal1.getTime().getTime() - cal2.getTime().getTime()) / 60000 >= 600)  // 분으로 600분, 즉 10시간 미만이면 ㄱ
+				continue;
+			returnList.add(schedule);
+		}
+		return returnList;
 	}
 }
