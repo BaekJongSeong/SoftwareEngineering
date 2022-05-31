@@ -23,10 +23,13 @@ import okhttp3.OkHttpClient;
 @RequiredArgsConstructor
 public class FirebaseCloudMessageService {
 	
-	@Value("${Path.path}")
+	@Value("${API.path}")
 	private String path;
+	
+	@Value("${API.android}")
+	private String android;
 
-    private final String API_URL = "https://fcm.googleapis.com/v1/projects/android-****/messages:send";
+    private final String API_URL = android;
     private final ObjectMapper objectMapper;
 
     public void sendMessageTo(String targetToken, String title, String body) throws IOException {

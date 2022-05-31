@@ -38,7 +38,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api")
 public class AlarmController {
 	
-	@Value("${Token.token}")
+	@Value("${API.token}")
 	private String token;
 	
 	private final IAlarmService alarmService;

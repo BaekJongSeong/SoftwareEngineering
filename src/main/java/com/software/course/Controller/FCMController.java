@@ -17,7 +17,7 @@ public class FCMController {
 
     private final FirebaseCloudMessageService firebaseCloudMessageService;
 
-    @Value("${Token.token}")
+    @Value("${API.token}")
 	private String token;
     
     @PostMapping("/api/fcm")
