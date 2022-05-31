@@ -7,7 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.software.course.Service.FirebaseCloudMessageService;
+import com.google.firebase.messaging.FirebaseMessagingException;
+import com.software.course.FirebaseCloudMessageService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,8 +22,8 @@ public class FCMController {
 	private String token;
     
     @PostMapping("/api/fcm")
-    public ResponseEntity pushMessage() throws IOException {
-        
+    public ResponseEntity pushMessage() throws IOException, FirebaseMessagingException {
+
         firebaseCloudMessageService.sendMessageTo(
         		token,
                 "sdfsdf",

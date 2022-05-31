@@ -67,13 +67,11 @@ public class Schedule {
 	 private List<Alarm> alarmList = new LinkedList<>();
    
    public static Schedule createScheduleEntity(ScheduleDto scheduleDto,Location location, Calendar calendar) {
-	   String[] temp = calendar.getName().replaceAll("년", "").replaceAll("월","").split(" ");
 	   return Schedule.builder()
  			.name(scheduleDto.getScheduleName())
  			.text(scheduleDto.getText())
  			.day(scheduleDto.getDay())
- 			.time(Timestamp.valueOf(temp[0]+"-"+temp[1]+"-"+String.valueOf(scheduleDto.getDay())+" "+
- 					String.valueOf(scheduleDto.getHour())+":"+String.valueOf(scheduleDto.getMinute()) + ":" + "00"))
+ 			.time(scheduleDto.getTime())
  			.location(location)
  			.calendar(calendar).build();
  		}

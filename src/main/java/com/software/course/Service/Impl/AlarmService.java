@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -92,11 +93,11 @@ public class AlarmService implements IAlarmService {
 	}
 	
 	@Override
+	@Transactional
 	public String makeAlarmTitle(Calendar calendar){
 		Optional<Calendar> newCalendar = calendarRepository.findById(calendar.getCalendarId());
-		
-		//return newCalendar.get().getAccount().getLoginId()+"님, 일정 알림입니다";
-		return "이젠되라";
+		return newCalendar.get().getAccount().getLoginId()+"님, 일정 알림입니다";
+		//return "이젠되라";
 	}
 	
 	//@Transactional
@@ -135,6 +136,8 @@ public class AlarmService implements IAlarmService {
 
     	ResponseEntity<String> result = restTemplate.exchange(req,String.class);
     	
+    	System.out.println(result.toString());
+    	
     	//String url="https://naveropenapi.apigw.ntruss.com/map-direction-15/v1/driving?"
     	//		+ "start="+String.valueOf(start.get().getLatitude())+","+String.valueOf(start.get().getLongitude())
     	//		+ "&goal="+String.valueOf(dest.get().getLatitude())+","+String.valueOf(dest.get().getLongitude());
@@ -148,7 +151,7 @@ public class AlarmService implements IAlarmService {
     	Integer temp = Integer.valueOf(element.select("span.num").text());
     	System.out.println(temp);*/
     	
-    	return "기다려";
+    	return result.toString();
     }
 
 }

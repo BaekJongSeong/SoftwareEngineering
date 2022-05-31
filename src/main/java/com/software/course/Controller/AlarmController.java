@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.software.course.FcmUtil;
+import com.google.firebase.messaging.FirebaseMessagingException;
+import com.software.course.FirebaseCloudMessageService;
 import com.software.course.Entity.Alarm;
 import com.software.course.Entity.Schedule;
 import com.software.course.Model.AlarmDto;
@@ -47,6 +47,8 @@ public class AlarmController {
 	
 	private final ILocationService locationService;
 	
+	private final FirebaseCloudMessageService firebaseService;
+	
 	@GetMapping("/alarm/{loginId}/{calendarName}/{scheduleName}")
 	public ResponseEntity<ResDto1<AlarmDto>>getAlarm(
 			@PathVariable String loginId,
@@ -75,16 +77,18 @@ public class AlarmController {
 	}
 	
 	@Scheduled(cron = "0 0/1 * * * *")
-	public void alarm() throws IOException {
+	public void alarm() throws IOException, FirebaseMessagingException {
+		System.out.println("asdflasjdhgajdfhlasdhflasd");
 		List<Schedule> scheduleForAlarmList = scheduleService.findScheduleForAlarm();
 		//Schedule schedule = scheduleService.findByFetchCalendarId(scheduleDto.getLoginId(), scheduleDto.getCalendarName(), scheduleDto.getScheduleName());
 		for(Schedule schedule : scheduleForAlarmList) {
-			String tokenId = token;
+			System.out.println("전송 완료si???");
 			String content = alarmService.makeAlarmContent(schedule);
-			FcmUtil fcmUtil = new FcmUtil();
-			fcmUtil.send_FCM(tokenId,alarmService.makeAlarmTitle(schedule.getCalendar()),content);
+			firebaseService.sendMessageTo(token,alarmService.makeAlarmTitle(schedule.getCalendar()),content);
+			System.out.println("전송 완료");
+			//FcmUtil fcmUtil = new FcmUtil();
+			//fcmUtil.send_FCM(tokenId,alarmService.makeAlarmTitle(schedule.getCalendar()),content);
 		}
-		//return "test";	
 	}
 	
 	

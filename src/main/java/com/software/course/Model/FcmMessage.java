@@ -1,5 +1,7 @@
 package com.software.course.Model;
 
+import com.google.firebase.messaging.Message;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,7 +20,6 @@ public class FcmMessage {
         private Notification notification;
         private String token;
     }
-
     @Builder
     @AllArgsConstructor
     @Getter
