@@ -3,6 +3,7 @@ package com.software.course.Service;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,9 @@ import okhttp3.OkHttpClient;
 @Component
 @RequiredArgsConstructor
 public class FirebaseCloudMessageService {
+	
+	@Value("${Path.path}")
+	private String path;
 
     private final String API_URL = "https://fcm.googleapis.com/v1/projects/android-****/messages:send";
     private final ObjectMapper objectMapper;
@@ -58,8 +62,7 @@ public class FirebaseCloudMessageService {
     }
 
     private String getAccessToken() throws IOException {
-        String firebaseConfigPath = "C:\\Users\\jsbae\\eclipse-workspace\\SoftwareEngineering\\src\\main\\resources\\calendarmap-8046b-firebase-adminsdk-v65hx-9f0f03436f.json";
-
+        String firebaseConfigPath = path;
         GoogleCredentials googleCredentials = GoogleCredentials
                 .fromStream(new ClassPathResource(firebaseConfigPath).getInputStream())
                 .createScoped(List.of("https://www.googleapis.com/auth/cloud-platform"));

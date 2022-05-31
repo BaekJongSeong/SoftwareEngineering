@@ -3,6 +3,7 @@ package com.software.course.Controller;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +37,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class AlarmController {
-
+	
+	@Value("${Token.token}")
+	private String token;
+	
 	private final IAlarmService alarmService;
 	
 	private final IScheduleService scheduleService;
@@ -75,7 +79,7 @@ public class AlarmController {
 		List<Schedule> scheduleForAlarmList = scheduleService.findScheduleForAlarm();
 		//Schedule schedule = scheduleService.findByFetchCalendarId(scheduleDto.getLoginId(), scheduleDto.getCalendarName(), scheduleDto.getScheduleName());
 		for(Schedule schedule : scheduleForAlarmList) {
-			String tokenId = "dPAvh5R6Tjyo_bq0U7DRFz:APA91bH2ZEHxSje8irSYFP0z8D3WVQuDcdEGGbcOmH1UPZUIE-M7CmbbPlxVPs1CvDaMjuslgGgkzfkh8IHwezOxfKTaeheedDNhBVSWx6rMdHx_USv-rE8UD_2Ovdc7rzww5-glcTE3";
+			String tokenId = token;
 			String content = alarmService.makeAlarmContent(schedule);
 			FcmUtil fcmUtil = new FcmUtil();
 			fcmUtil.send_FCM(tokenId,alarmService.makeAlarmTitle(schedule.getCalendar()),content);
