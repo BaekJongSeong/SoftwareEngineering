@@ -69,14 +69,7 @@ public class AlarmService implements IAlarmService {
 	@Override
 	@Transactional
 	public String makeAlarmContent(Schedule schedule) throws IOException {
-		String temp = this.pathSearching(schedule);
-	//	String content="";
-	//	Optional<Calendar> newCalendar = calendarRepository.findById(schedule.getCalendar().getCalendarId());
-	//	Optional<Account> newAccount = accountRepository.findById(newCalendar.get().getAccount().getAccountId());
-	//	content += newCalendar.get().getName() + "캘린더의 "+schedule.getName()+"에 대한 일정입니다.\n";
-	//	content += "출발 장소는 "+newAccount.get().getLocation().getName()+"이며 도착 장소는 "+schedule.getLocation().getName()+"입니다\n";
-		//content += "현재 출발 "++"분 전이며, 예상 소요 시간은 "++"분 입니다.";
-		return temp;
+		return this.pathSearching(schedule);
 	}
 	
 	
@@ -93,19 +86,15 @@ public class AlarmService implements IAlarmService {
 		return newCalendar.get().getAccount().getLoginId()+"님, 일정 알림입니다";
 	}
 	
-	//@Transactional
     public String pathSearching(Schedule schedule) throws IOException {
     	String userAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36";
     	Optional<Schedule> oldSchedule = scheduleRepository.findById(schedule.getScheduleId());
     	Location start = oldSchedule.get().getCalendar().getAccount().getLocation();
     	Location dest = oldSchedule.get().getLocation();
-    	String content="";
-    	content += oldSchedule.get().getCalendar().getName() + "캘린더의 "+oldSchedule.get().getName()+"에 대한 일정입니다.\n";
-    	content += "출발 장소는 "+start.getName()+"이며 도착 장소는 "+dest.getName()+"입니다\n";
-    		
-    	ByteBuffer buffer = StandardCharsets.UTF_8.encode(String.valueOf(start.getLatitude())+","+String.valueOf(start.getLongitude()));
+    	
+    	ByteBuffer buffer = StandardCharsets.UTF_8.encode(String.valueOf(start.getLongitude())+","+String.valueOf(start.getLatitude())+",name="+start.getName());
     	String encode1 = StandardCharsets.UTF_8.decode(buffer).toString();
-    	buffer = StandardCharsets.UTF_8.encode(String.valueOf(dest.getLatitude())+","+String.valueOf(dest.getLongitude()));
+    	buffer = StandardCharsets.UTF_8.encode(String.valueOf(dest.getLongitude())+","+String.valueOf(dest.getLatitude())+",name="+dest.getName());
     	String encode2 = StandardCharsets.UTF_8.decode(buffer).toString();
     	URI uri = UriComponentsBuilder
     			.fromUriString("https://naveropenapi.apigw.ntruss.com")
@@ -123,12 +112,29 @@ public class AlarmService implements IAlarmService {
     	ResponseEntity<String> result = restTemplate.exchange(req,String.class);
     	
     	System.out.println(result.toString());
-    	
+    	Integer time = Integer.valueOf(result.toString().split("\"duration\"")[1].replaceAll(":", "").split(",")[0]) / 60000;
+    	String[] route = result.toString().split(",\"section\":")[1].split(",\"guide\":")[0].split(",\"name\":\"");
+    	String[] routeNew = new String[route.length-1];
+    	for(int idx=1; idx< route.length; idx++) {
+    		routeNew[idx-1] = route[idx].split("\",\"")[0];
+    	}
     	//String url="https://naveropenapi.apigw.ntruss.com/map-direction-15/v1/driving?"
     	//		+ "start="+String.valueOf(start.get().getLatitude())+","+String.valueOf(start.get().getLongitude())
     	//		+ "&goal="+String.valueOf(dest.get().getLatitude())+","+String.valueOf(dest.get().getLongitude());
-    	
-    	return result.toString();
+    	String content="";
+    	content += oldSchedule.get().getCalendar().getName() + "캘린더의 "+oldSchedule.get().getName()+"에 대한 일정입니다.\n";
+    	content += "출발 장소는 "+start.getName()+"이며 도착 장소는 "+dest.getName()+"입니다\n";
+    	content += "현재 출발 "+Long.valueOf((long)(oldSchedule.get().getTime().getTime() - new Date().getTime()) / 60000).toString()
+    			+"분 전이며, 예상 소요 시간은 "+time.toString()+"분 입니다.\n";
+    	content += "빠른길은 ";
+    	for(int idx=0; idx< routeNew.length; idx++) {
+    		if(idx==routeNew.length-1) {
+    			content+=routeNew[idx] + " 입니다."; break;
+    		}
+    		content+= routeNew[idx]+"->";
+    	}
+    	System.out.println(content);
+    	return content;
     }
 
 }
