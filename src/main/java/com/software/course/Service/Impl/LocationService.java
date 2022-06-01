@@ -3,13 +3,10 @@ package com.software.course.Service.Impl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.software.course.Entity.Account;
 import com.software.course.Entity.Location;
 import com.software.course.Entity.Schedule;
 import com.software.course.Model.PathDto;
-import com.software.course.Repository.AccountRepository;
 import com.software.course.Repository.LocationRepository;
-import com.software.course.Service.ICalendarService;
 import com.software.course.Service.ILocationService;
 import com.software.course.Service.IScheduleService;
 
@@ -22,15 +19,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Service
 public class LocationService implements ILocationService{
-
-	//private final IAccountService accountService;
-	
-	private final ICalendarService calendarService;
 	
 	private final IScheduleService scheduleService;
-	
-	private final AccountRepository accountRepository;
-	
+		
 	private final LocationRepository locationRepository;
 	
 	@Override
@@ -59,7 +50,7 @@ public class LocationService implements ILocationService{
     }
     
     @Override
-    @Transactional  //여기 문제있음!!!
+    @Transactional
     public Location deleteLocation(PathDto pathDto) {
     	Schedule schedule = scheduleService.findByFetchCalendarId(pathDto.getLoginId(),pathDto.getCalendarName(),pathDto.getScheduleName());
     	Location location = schedule.getLocation();

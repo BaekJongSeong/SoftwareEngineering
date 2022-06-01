@@ -95,4 +95,11 @@ public class ScheduleController {
 		return new ResponseEntity<>(ResDto1.createResDto(ScheduleDto.builder().loginId(scheduleDto.getLoginId())
 				.calendarName(scheduleDto.getCalendarName()).build(),1,0), new HttpHeaders(),HttpStatus.OK);
 	}
+	
+	@DeleteMapping("/all-schedule")
+	 public ResponseEntity deleteAllSchedule (
+	) {
+		scheduleService.deleteAllSchedule();
+		return ResponseEntity.ok().build();
+	}
 }

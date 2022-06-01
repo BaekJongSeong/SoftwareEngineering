@@ -24,7 +24,6 @@ import com.software.course.Model.AlarmDto;
 import com.software.course.Model.ResDto1;
 import com.software.course.Model.ScheduleDto;
 import com.software.course.Service.IAlarmService;
-import com.software.course.Service.ILocationService;
 import com.software.course.Service.IScheduleService;
 
 import lombok.RequiredArgsConstructor;
@@ -44,11 +43,10 @@ public class AlarmController {
 	private final IAlarmService alarmService;
 	
 	private final IScheduleService scheduleService;
-	
-	private final ILocationService locationService;
-	
+		
 	private final FirebaseCloudMessageService firebaseService;
 	
+
 	@GetMapping("/alarm/{loginId}/{calendarName}/{scheduleName}")
 	public ResponseEntity<ResDto1<AlarmDto>>getAlarm(
 			@PathVariable String loginId,
@@ -78,16 +76,11 @@ public class AlarmController {
 	
 	@Scheduled(cron = "0 0/1 * * * *")
 	public void alarm() throws IOException, FirebaseMessagingException {
-		System.out.println("asdflasjdhgajdfhlasdhflasd");
 		List<Schedule> scheduleForAlarmList = scheduleService.findScheduleForAlarm();
-		//Schedule schedule = scheduleService.findByFetchCalendarId(scheduleDto.getLoginId(), scheduleDto.getCalendarName(), scheduleDto.getScheduleName());
 		for(Schedule schedule : scheduleForAlarmList) {
-			System.out.println("전송 완료si???");
 			String content = alarmService.makeAlarmContent(schedule);
 			firebaseService.sendMessageTo(token,alarmService.makeAlarmTitle(schedule.getCalendar()),content);
 			System.out.println("전송 완료");
-			//FcmUtil fcmUtil = new FcmUtil();
-			//fcmUtil.send_FCM(tokenId,alarmService.makeAlarmTitle(schedule.getCalendar()),content);
 		}
 	}
 	

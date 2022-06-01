@@ -19,4 +19,6 @@ public interface IScheduleService {
 	public List<Schedule> findByFetchCalendarIdOrThrow(String loginId,String calendarName);
 	
 	public List<Schedule> findScheduleForAlarm();
+	
+	public void deleteAllSchedule();
 }

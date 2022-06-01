@@ -9,7 +9,7 @@ public interface IAccountService {
     public Account checkForSignup(SignupDto signupDto);
 
     public Account createAccount(SignupDto signupDto);
-    
+        
     public Account modifyAccount(SignupDto signupDto);
            
     public Account findByLoginIdOrReturn(String loginId);

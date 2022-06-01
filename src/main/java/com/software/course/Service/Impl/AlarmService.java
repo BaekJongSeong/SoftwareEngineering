@@ -15,15 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.software.course.Entity.Account;
 import com.software.course.Entity.Alarm;
 import com.software.course.Entity.Calendar;
 import com.software.course.Entity.Location;
 import com.software.course.Entity.Schedule;
-import com.software.course.Repository.AccountRepository;
 import com.software.course.Repository.AlarmRepository;
 import com.software.course.Repository.CalendarRepository;
-import com.software.course.Repository.LocationRepository;
 import com.software.course.Repository.ScheduleRepository;
 import com.software.course.Service.IAlarmService;
 import com.software.course.Service.IScheduleService;
@@ -37,14 +34,10 @@ public class AlarmService implements IAlarmService {
 	private final IScheduleService scheduleService;
 	
 	private final AlarmRepository alarmRepository;
-	
-	private final ScheduleRepository scheduleRepository;
-	
-	private final AccountRepository accountRepository;
-
+		
 	private final CalendarRepository calendarRepository;
-	
-	private final LocationRepository locationRepository;
+		
+	private final ScheduleRepository scheduleRepository;
 	
 	@Value("${API.key}")
 	private String key;
@@ -59,8 +52,7 @@ public class AlarmService implements IAlarmService {
 	
 	@Override
 	public Alarm modifyAlarm(Date time, Schedule schedule) {
-		Schedule oldSchedule = scheduleRepository.findByFetchScheduleId(schedule.getScheduleId());
-		Alarm alarm = oldSchedule.getAlarmList().get(0);
+		Alarm alarm = schedule.getAlarmList().get(0);
 		alarm.setAlarmBefore(time);
 		alarmRepository.save(alarm);
 		return alarm;
@@ -75,6 +67,7 @@ public class AlarmService implements IAlarmService {
 	}
 	
 	@Override
+	@Transactional
 	public String makeAlarmContent(Schedule schedule) throws IOException {
 		String temp = this.pathSearching(schedule);
 	//	String content="";
@@ -85,6 +78,7 @@ public class AlarmService implements IAlarmService {
 		//content += "현재 출발 "++"분 전이며, 예상 소요 시간은 "++"분 입니다.";
 		return temp;
 	}
+	
 	
 	@Override
 	public Alarm getAlarmByScheduleId(String loginId,String calendarName,String scheduleName) {
@@ -97,29 +91,21 @@ public class AlarmService implements IAlarmService {
 	public String makeAlarmTitle(Calendar calendar){
 		Optional<Calendar> newCalendar = calendarRepository.findById(calendar.getCalendarId());
 		return newCalendar.get().getAccount().getLoginId()+"님, 일정 알림입니다";
-		//return "이젠되라";
 	}
 	
 	//@Transactional
     public String pathSearching(Schedule schedule) throws IOException {
     	String userAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36";
-
-       	//String url = "https://map.kakao.com/link/from/"+scheduleDto.getLocationDto().getName()+","+scheduleDto.getLocationDto().getLatitude()+","+scheduleDto.getLocationDto().getLongitude()
-    	//		+"/to/"+schedule.getLocation().getName()+","+schedule.getLocation().getLatitude()+","+schedule.getLocation().getLongitude();
-    	Optional<Calendar> newCalendar = calendarRepository.findById(schedule.getCalendar().getCalendarId());
-    	Optional<Account> newAccount = accountRepository.findById(newCalendar.get().getAccount().getAccountId());
-    	Optional<Location> start = locationRepository.findById(newAccount.get().getLocation().getLocationId());
-    	Optional<Location> dest = locationRepository.findById(schedule.getLocation().getLocationId());
+    	Optional<Schedule> oldSchedule = scheduleRepository.findById(schedule.getScheduleId());
+    	Location start = oldSchedule.get().getCalendar().getAccount().getLocation();
+    	Location dest = oldSchedule.get().getLocation();
     	String content="";
-    	content += newCalendar.get().getName() + "캘린더의 "+schedule.getName()+"에 대한 일정입니다.\n";
-    	content += "출발 장소는 "+start.get().getName()+"이며 도착 장소는 "+dest.get().getName()+"입니다\n";
+    	content += oldSchedule.get().getCalendar().getName() + "캘린더의 "+oldSchedule.get().getName()+"에 대한 일정입니다.\n";
+    	content += "출발 장소는 "+start.getName()+"이며 도착 장소는 "+dest.getName()+"입니다\n";
     		
-    	
-    	//String url= "http://naverapp.naver.com/route/public?slat="+ String.valueOf(start.get().getLatitude())+"&slng="+String.valueOf(start.get().getLongitude())+"&sname="+start.get().getName()
-    	//		+"&dlat="+String.valueOf(dest.get().getLatitude())+"&dlng="+String.valueOf(dest.get().getLongitude())+"&dname="+dest.get().getName();
-    	ByteBuffer buffer = StandardCharsets.UTF_8.encode(String.valueOf(start.get().getLatitude())+","+String.valueOf(start.get().getLongitude()));
+    	ByteBuffer buffer = StandardCharsets.UTF_8.encode(String.valueOf(start.getLatitude())+","+String.valueOf(start.getLongitude()));
     	String encode1 = StandardCharsets.UTF_8.decode(buffer).toString();
-    	buffer = StandardCharsets.UTF_8.encode(String.valueOf(dest.get().getLatitude())+","+String.valueOf(dest.get().getLongitude()));
+    	buffer = StandardCharsets.UTF_8.encode(String.valueOf(dest.getLatitude())+","+String.valueOf(dest.getLongitude()));
     	String encode2 = StandardCharsets.UTF_8.decode(buffer).toString();
     	URI uri = UriComponentsBuilder
     			.fromUriString("https://naveropenapi.apigw.ntruss.com")
@@ -141,15 +127,6 @@ public class AlarmService implements IAlarmService {
     	//String url="https://naveropenapi.apigw.ntruss.com/map-direction-15/v1/driving?"
     	//		+ "start="+String.valueOf(start.get().getLatitude())+","+String.valueOf(start.get().getLongitude())
     	//		+ "&goal="+String.valueOf(dest.get().getLatitude())+","+String.valueOf(dest.get().getLongitude());
-    	//System.out.println(url);
-    	
-    	//Document doc =Jsoup.connect(url).ignoreHttpErrors(true).get();//.execute();//Jsoup.connect(url).userAgent(userAgent).get();
-    	//System.out.println(doc.toString());
-    	/*Element element =doc.getElementById("content");
-    	System.out.println(element.toString());
-    	//Elements element = doc.select("div.contents");
-    	Integer temp = Integer.valueOf(element.select("span.num").text());
-    	System.out.println(temp);*/
     	
     	return result.toString();
     }

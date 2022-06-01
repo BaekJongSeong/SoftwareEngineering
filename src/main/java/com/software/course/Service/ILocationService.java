@@ -8,8 +8,8 @@ public interface ILocationService {
 	public Location getLocationByScheduleId(String loginId,String calendarName,String scheduleName);
 	
 	public Location createLocation(String name, Double latitude, Double longitude);
-	
-    public Location modifyLocation(PathDto pathDto);
+		
+	public Location modifyLocation(PathDto pathDto);
     
     public Location modifyLocationAccount(Location location,String name, Double latitude, Double longitude);
 

@@ -15,7 +15,6 @@ import com.software.course.Entity.Location;
 import com.software.course.Entity.Schedule;
 import com.software.course.Model.ScheduleDto;
 import com.software.course.Repository.CalendarRepository;
-import com.software.course.Repository.LocationRepository;
 import com.software.course.Repository.ScheduleRepository;
 import com.software.course.Service.ICalendarService;
 import com.software.course.Service.IScheduleService;
@@ -31,9 +30,7 @@ import lombok.RequiredArgsConstructor;
 public class ScheduleService implements IScheduleService{
 			
 	private final ICalendarService calendarService;
-	
-	private final LocationRepository locationRepository;
-	
+		
 	private final CalendarRepository calendarRepository;
 	
 	private final ScheduleRepository scheduleRepository;
@@ -109,5 +106,10 @@ public class ScheduleService implements IScheduleService{
 			returnList.add(schedule);
 		}
 		return returnList;
+	}
+	
+	@Override
+	public void deleteAllSchedule() {
+		scheduleRepository.deleteAll();
 	}
 }

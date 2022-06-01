@@ -45,7 +45,6 @@ public class CalendarService implements ICalendarService{
 	@Override
 	public Calendar createCalendar(String loginId, String calendarName, Account account) {
 		Calendar calendar = Calendar.createCalendarEntity(account, calendarName);
-		//System.out.println(calendarName);
 		calendarRepository.save(calendar);
 	    return calendar;
 	}
