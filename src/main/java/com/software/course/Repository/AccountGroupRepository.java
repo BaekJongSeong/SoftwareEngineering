@@ -13,6 +13,6 @@ import com.software.course.Entity.AccountGroup;
 
 public interface AccountGroupRepository extends JpaRepository<AccountGroup, Integer> {
 	
-	@Query("select DISTINCT c from AccountGroup c where c.use=?1")
+	@Query("select DISTINCT c from AccountGroup c where c.useAt=?1")
 	List<AccountGroup> findUnused(int use);
 }

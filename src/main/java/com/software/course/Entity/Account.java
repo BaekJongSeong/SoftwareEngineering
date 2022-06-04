@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -39,12 +40,13 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "account")
 public class Account {
 	
 	@Id
     @GeneratedValue
     @Column(name = "account_id")
-    private Integer accountId;
+    private int accountId;
 	
     @Column(name = "create_at")
     @Temporal(TemporalType.TIMESTAMP)

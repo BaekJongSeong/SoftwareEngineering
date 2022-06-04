@@ -41,7 +41,7 @@ public class AccountGroup {
 	@Id
     @GeneratedValue
     @Column(name = "account_group_id")
-    private Integer accountGroupId;
+    private int accountGroupId;
 	
     @Column(name = "create_at")
     @Temporal(TemporalType.TIMESTAMP)
@@ -50,7 +50,8 @@ public class AccountGroup {
     private Date createAt;  
 
     //binary
-    private int use;
+    @Column(name = "use_at")
+    private int useAt;
     
     @OneToMany(mappedBy = "accountGroup", fetch=FetchType.LAZY , cascade = CascadeType.ALL)
 	 private List<Account> accountList = new LinkedList<>();

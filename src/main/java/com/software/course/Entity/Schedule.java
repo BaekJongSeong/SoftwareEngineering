@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -38,12 +39,13 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "schedule")
 public class Schedule {
 	
 	@Id
     @GeneratedValue
     @Column(name = "schedule_id")
-    private Integer scheduleId;
+    private int scheduleId;
 	
     private String name;
     

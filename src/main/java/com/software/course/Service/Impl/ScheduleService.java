@@ -45,9 +45,9 @@ public class ScheduleService implements IScheduleService{
 	@Override
 	public Schedule modifySchedule(String loginId, ScheduleDto scheduleDto) {
 		Schedule schedule =this.findByFetchCalendarId(loginId,scheduleDto.getCalendarName(),scheduleDto.getPrevScheduleName());
-		schedule.setName(scheduleDto.getCalendarName());
+		schedule.setName(scheduleDto.getScheduleName());
 		schedule.setDay(scheduleDto.getDay());
-		schedule.setText(scheduleDto.getScheduleName());
+		schedule.setText(scheduleDto.getText());
 		schedule.setTime(scheduleDto.getTime());
 		scheduleRepository.save(schedule);
 	    return schedule;

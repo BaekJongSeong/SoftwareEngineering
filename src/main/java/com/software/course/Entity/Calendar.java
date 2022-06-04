@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -37,12 +38,13 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "calendar")
 public class Calendar {
 	
 	@Id
     @GeneratedValue
     @Column(name = "calendar_id")
-    private Integer calendarId;
+    private int calendarId;
 	
 	private String name;
 	

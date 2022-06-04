@@ -7,6 +7,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,12 +25,13 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "location")
 public class Location {
 	
 	@Id
     @GeneratedValue
     @Column(name = "location_id")
-    private Integer locationId;
+    private int locationId;
 	
 	private String name;
 	

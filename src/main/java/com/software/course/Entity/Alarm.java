@@ -8,6 +8,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -31,12 +32,13 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "alarm")
 public class Alarm {
 	
 	@Id
     @GeneratedValue
     @Column(name = "alarm_id")
-    private Integer alarmId;
+    private int alarmId;
 	
 	@Column(name = "push_access")
 	private int pushAccess;

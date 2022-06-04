@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -74,7 +75,15 @@ public class AlarmController {
 				scheduleDto.getCalendarName(),schedule),1,0), new HttpHeaders(),HttpStatus.OK);
 	}
 	
-	@Scheduled(cron = "0 0/1 * * * *")
+	@PostMapping("/alarm")
+	public ResponseEntity getAlarmMessage(@RequestBody ScheduleDto scheduleDto) throws IOException, FirebaseMessagingException{
+		Schedule schedule = scheduleService.findByFetchCalendarId(scheduleDto.getLoginId(), scheduleDto.getCalendarName(), scheduleDto.getScheduleName());
+		String content = alarmService.makeAlarmContent(schedule);
+		firebaseService.sendMessageTo(token,alarmService.makeAlarmTitle(schedule.getCalendar()),content);		
+		return ResponseEntity.ok().build();
+	}
+	
+	@Scheduled(cron = "0 0/5 * * * *")
 	public void alarm() throws IOException, FirebaseMessagingException {
 		List<Schedule> scheduleForAlarmList = scheduleService.findScheduleForAlarm();
 		for(Schedule schedule : scheduleForAlarmList) {
