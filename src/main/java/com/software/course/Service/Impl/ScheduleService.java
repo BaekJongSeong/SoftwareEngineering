@@ -39,6 +39,7 @@ public class ScheduleService implements IScheduleService{
 	public Schedule createSchedule(String loginId, ScheduleDto scheduleDto, Location location) {
     	Calendar calendar =calendarService.findByFetchLoginId(loginId,scheduleDto.getCalendarName());
 		Schedule schedule = Schedule.createScheduleEntity(scheduleDto,location, calendar);
+		schedule.setTime(changeDate(schedule.getTime()));
 	    return scheduleRepository.save(schedule);
 	}
 	
@@ -48,9 +49,16 @@ public class ScheduleService implements IScheduleService{
 		schedule.setName(scheduleDto.getScheduleName());
 		schedule.setDay(scheduleDto.getDay());
 		schedule.setText(scheduleDto.getText());
-		schedule.setTime(scheduleDto.getTime());
+		schedule.setTime(changeDate(scheduleDto.getTime()));
 		scheduleRepository.save(schedule);
 	    return schedule;
+	}
+	
+	public Date changeDate(Date date) {
+		java.util.Calendar cal = java.util.Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(java.util.Calendar.HOUR, -9);
+		return cal.getTime();
 	}
 	
 	@Override

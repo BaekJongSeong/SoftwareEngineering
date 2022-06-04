@@ -45,15 +45,22 @@ public class AlarmService implements IAlarmService {
 	@Value("${API.password}")
 	private String password;
 	
+	public Date changeDate(Date date) {
+		java.util.Calendar cal = java.util.Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(java.util.Calendar.HOUR, -9);
+		return cal.getTime();
+	}
+	
 	@Override
 	public Alarm createAlarm(Date time, Schedule schedule) {
-		return alarmRepository.save(Alarm.createAlarmEntity(time, schedule));
+		return alarmRepository.save(Alarm.createAlarmEntity(changeDate(time), schedule));
 	}
 	
 	@Override
 	public Alarm modifyAlarm(Date time, Schedule schedule) {
 		Alarm alarm = schedule.getAlarmList().get(0);
-		alarm.setAlarmBefore(time);
+		alarm.setAlarmBefore(changeDate(time));
 		alarmRepository.save(alarm);
 		return alarm;
 	}
